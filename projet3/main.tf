@@ -1,5 +1,8 @@
 provider "aws" {
-    region = "us-east-2"
+    region = var.AWS_REGION
+    access_key = var.AWS_ACCESS_KEY
+    secret_key = var.AWS_SECRET_KEY
+
 }
 
 resource "aws_security_group" "instance_sg" {
@@ -21,7 +24,7 @@ resource "aws_security_group" "instance_sg" {
 }
 
 resource "aws_instance" "my_ec2_instance" {
-    ami = "ami-07c1207a9d40bc3bd"
+    ami = var.AWS_AMIS[var.AWS_REGION]
     instance_type = "t2.micro"
     vpc_security_group_ids = [aws_security_group.instance_sg.id]
 
@@ -31,10 +34,14 @@ resource "aws_instance" "my_ec2_instance" {
 		sudo apt-get install -y apache2
 		sudo systemctl start apache2
 		sudo systemctl enable apache2
-		echo "<h1>Hello devopssec</h1>" > /var/www/html/index.html
+		sudo echo "<h1>Hello devopssec</h1>" > /var/www/html/index.html
 	EOF
     
     tags = {
         Name = "terraform test"
     }
+}
+
+output "public_ip" {
+    value = aws_instance.my_ec2_instance.public_ip
 }
