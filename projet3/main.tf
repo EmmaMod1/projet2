@@ -1,44 +1,13 @@
 provider "aws" {
-    region = var.AWS_REGION
- }
-
-resource "aws_security_group" "instance_sg" {
-    name = "terraform-test-sg"
-
-    egress {
-        from_port       = 0
-        to_port         = 0
-        protocol        = "-1"
-        cidr_blocks     = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  profile    = "default"
+  region     = "us-west-2"
 }
 
-resource "aws_instance" "my_ec2_instance" {
-    ami = var.AWS_AMIS[var.AWS_REGION]
-    instance_type = "t2.micro"
-    vpc_security_group_ids = [aws_security_group.instance_sg.id]
-
-	user_data = <<-EOF
-		#!/bin/bash
-        sudo apt-get update
-		sudo apt-get install -y apache2
-		sudo systemctl start apache2
-		sudo systemctl enable apache2
-		sudo echo "<h1>Hello devopssec</h1>" > /var/www/html/index.html
-	EOF
-    
-    tags = {
-        Name = "terraform test"
-    }
+resource "aws_instance" "my_ec2" {
+  ami           = "ami-06ffade19910cbfc0"
+  instance_type = "t2.micro"
 }
 
-output "public_ip" {
-    value = aws_instance.my_ec2_instance.public_ip
+provisioner "local-exec" {
+    command = "echo ${aws_instance.my_ec2.public_ip} > ip_address.txt"
 }
