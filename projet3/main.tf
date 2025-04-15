@@ -49,6 +49,7 @@ resource "aws_instance" "my_ec2" {
         inline = [
           "sudo apt-get -f -y update",
           "sudo apt-get install -f -y apache2",
+          "sudo mkdir -p /var/www/html",
           "sudo systemctl start apache2",
           "sudo systemctl enable apache2",
           "sudo sh -c 'echo \"<h1>Hello devopssec</h1>\" > /var/www/html/index.html'",
