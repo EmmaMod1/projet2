@@ -1,5 +1,5 @@
 variable "IAM_USERS" { 
-    type = "list" 
+    type = list
     default = ["hatim", "sarah", "alex"] 
 }
 
