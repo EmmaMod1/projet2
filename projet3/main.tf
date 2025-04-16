@@ -13,5 +13,7 @@ variable "IAM_USERS" {
 }
 
 output "users" {
-    value = [for name, role in var.IAM_USERS : "${name} est ${role}"]
+    value = {for name, role in var.IAM_USERS : "Qui est ${name} ?" => "C'est ${role}"}
 }
+
+
