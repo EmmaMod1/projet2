@@ -1,18 +1,17 @@
-variable "IAM_USERS" { 
-    type = list 
-    default = ["hatim", "alex"] 
-}
-
 provider "aws" {
     region = "us-east-1" 
 }
 
-resource "aws_iam_user" "team_iam_user" {
-    for_each = toset(var.IAM_USERS)
-    name  = each.value
+variable "IAM_USERS" {
+    description = "utilisateurs iam avec leur description"
+    type        = map(string)
+        default     = {
+        hatim     = "notre créateur du site devopssec"
+        sarah      = "notre cobaye Terraform"
+        alex      = "notre voleur des indexs Terraform"
+    }
+}
 
-    tags = { 
-        key = each.key 
-        value = each.value 
-    } 
+output "users" {
+    value = [for name, role in var.IAM_USERS : "${name} est ${role}"]
 }
