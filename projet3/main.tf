@@ -1,6 +1,6 @@
 variable "IAM_USERS" { 
     type = list 
-    default = ["hatim", "sarah", "alex"] 
+    default = ["hatim", "alex"] 
 }
 
 provider "aws" {
